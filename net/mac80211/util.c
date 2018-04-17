@@ -3557,3 +3557,25 @@ const u8 ieee80211_ac_to_qos_mask[IEEE80211_NUM_ACS] = {
 	IEEE80211_WMM_IE_STA_QOSINFO_AC_BE,
 	IEEE80211_WMM_IE_STA_QOSINFO_AC_BK
 };
+
+bool ieee80211_fragment_is_80211aa(void* _buff, int len)
+{
+	u8* buff = (u8*) _buff;
+	if(len >= 60 &&
+		// we have enough bytes to make the following checks
+			buff[24] == 0xAA && // normal LLC
+			buff[25] == 0xAA &&
+			buff[30] == 0x08 && // carrying IP
+			buff[31] == 0x00 &&
+			buff[32] == 0x45 )
+	{
+		if( buff[41] == 0x11 ) // UDP
+		{
+			int dport = buff[54] << 8 | buff[55];
+			if(dport == 0xBEEF)
+				return true;
+		}
+	}
+	return false;
+}
+EXPORT_SYMBOL(ieee80211_fragment_is_80211aa);

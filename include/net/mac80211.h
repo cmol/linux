@@ -5962,4 +5962,7 @@ void ieee80211_nan_func_match(struct ieee80211_vif *vif,
 			      struct cfg80211_nan_match_params *match,
 			      gfp_t gfp);
 
+/* Prototype for 802.11aa detection */
+bool ieee80211_fragment_is_80211aa(void* buff, int len);
+
 #endif /* MAC80211_H */
